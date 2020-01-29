@@ -26,7 +26,7 @@ const initialState = {
     bodyContent: '',
     bodyVariables: '',
     bodyType: 'none',
-    rawType: 'Text (text/plain)',
+    rawType: 'GRPC USER AGENT BODY',
     JSONFormatted: true,
   },
   newRequestSSE: {

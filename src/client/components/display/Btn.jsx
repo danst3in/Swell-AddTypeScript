@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import ReqResCtrl from '../ReqResCtrl';
+// import ReqResCtrl from '../ReqResCtrl';
 import * as store from '../../store';
 import * as actions from '../../actions/actions';
 
