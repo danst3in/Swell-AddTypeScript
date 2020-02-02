@@ -91,7 +91,10 @@ grpcController.openGrpcConnection = (reqResObj, connectionArray) => {
       let packageName = reqResObj.packageName;
       let url = reqResObj.url;
       let queryArr = reqResObj.queryArr;
+      let PROTO_PATH = reqResObj.protoPath;
+
       console.log('pckname', packageName, 'service', service, 'rpc', rpc, 'services', services)
+      console.log('protopath' , PROTO_PATH)
       //go through services object, find service where name matches our passed in service, then grab the rpc list of that service, also save that service
       let rpcList;
       let foundService;
@@ -168,7 +171,6 @@ grpcController.openGrpcConnection = (reqResObj, connectionArray) => {
         // const service = services[0].name;
         // const rpc = services[0].rpcs[0].name;
         // let PROTO_PATH = path.join( dirName, "grpc_mockData/protos/hw2.proto")
-        let PROTO_PATH = reqResObj.protoPath;
         const packageDefinition = protoLoader.loadSync(
             PROTO_PATH,
             {

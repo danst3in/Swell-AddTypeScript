@@ -24,10 +24,29 @@ class GRPCProtoEntryForm extends Component {
   }
 
   // import local proto file and have it uploaded to document body
+  // import proto file via electron file import dialog and have it displayed in proto textarea box
   importProtos() {
+    // upon clicking the import proto button, if the protoContent contains any code, reset selected package name, service, request, and streaming type
+    if (this.props.newRequestBody.protoContent !== null) {
+      this.props.setNewRequestStreams({
+        ...this.props.newRequestStreams,
+        selectedPackage: null,
+        selectedService: null,
+        selectedRequest: null,
+        selectedStreamingType: null,
+      });
+      // clears the protocontent textarea by reseting it to an empty string in state of the store
+      this.props.setNewRequestBody({
+        ...this.props.newRequestBody,
+        protoContent: ''
+      });
+      // grabs the service dropdown list and resets it to the first option "Select Service"
+      document.getElementById('dropdownService').selectedIndex = 0;
+    }
     remote.dialog.showOpenDialog({
       buttonLabel : "Import Proto File",
       properties: ['openFile', 'multiSelections'],
+      // limits the client to only importing .proto files
       filters: [
         { name: 'Protos', extensions: ['proto'] },
       ]
@@ -36,41 +55,26 @@ class GRPCProtoEntryForm extends Component {
       if (!filePaths) {
         return;
       }
-      let importedProto = fs.readFileSync(filePaths.filePaths[0], 'utf-8');
+      // read uploaded proto file
+      const importedProto = fs.readFileSync(filePaths.filePaths[0], 'utf-8');
+      // set state of protoContent in the store
       this.props.setNewRequestBody({
         ...this.props.newRequestBody,
         protoContent: importedProto
-        // write to saveProto file
-        // const dirName = remote.app.getAppPath();
-        // fs.writeFileSync(path.join(dirName, 'src/client/components/composer/protos/saveProto.proto'), data, 'utf-8', (err) => {
-        //   if(err){
-        //       alert("An error ocurred writing the file :" + err.message);
-        //       return;
-        //   }
-        //   console.log('Proto file has been saved')
-        // })
       });
-      let parsedProtoContent = protoParserFunc(this.props.newRequestBody.protoContent)
+      // parse proto file via protoParserFunc imported from protoParser.js
+      protoParserFunc(this.props.newRequestBody.protoContent)
       .then(data => {
-        // console.log(data);
-        // console.log('after parser runs', data.serviceArr);
-        // this.setState({
-        //   ...this.state,
-        //   services: data.serviceArr,
-        //   protoPath: data.protoPath
-        // })  
+        // save parsed proto file details to state in the store
         this.props.setNewRequestStreams({
           ...this.props.newRequestStreams,
           services: data.serviceArr,
           protoPath: data.protoPath
         })
       }).catch((err) => console.log(err));
-      // protoParser(this.props.newRequestBody.protoContent)
-      // .then((data) => parsedProtoContent = data);
-      // console.log(parsedProtoContent);
-      //set state after successful invocation
     });
   }
+  
 
   updateProtoBody(value) {
     this.props.setNewRequestBody({

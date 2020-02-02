@@ -16,16 +16,16 @@ async function protoParserFunc(protoBodyData) {
   let protoStorage = {};
   //store the original .proto content in the storage before parsing
   protoStorage.protoMaster = protoBodyData;
-
+  let protoID = Math.floor(Math.random() * 500)
   // write to saveProto file for interaction with the server
   // const dirName = remote.app.getAppPath(); // uncomment when done testing above
-  fs.writeFileSync(path.join(process.cwd(), 'src/client/components/composer/protos/saveProto.proto'), protoBodyData, 'utf-8')
+  fs.writeFileSync(path.join(process.cwd(), 'src/client/components/composer/protos/' + protoID + '.proto'), protoBodyData, 'utf-8')
     console.log('Proto file has been saved')
   // });
 
   // define the modular client for testing
   // declare path variable of imported proto file
-  const PROTO_PATH = path.join(process.cwd(), 'src/client/components/composer/protos/saveProto.proto');
+  const PROTO_PATH = path.join(process.cwd(), 'src/client/components/composer/protos/' + protoID + '.proto');
 
   // create gRPC package options
   const protoOptionsObj = {
