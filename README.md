@@ -13,7 +13,7 @@ Swell is a API development tool that enables developers to test  endpoints serve
 
 ## Getting Started
 
-Visit www.getswell.io to download the latest release. 
+Visit www.getswell.io to download the latest release.
 
 Swell is currently available for OS X, Linux and Windows.
 
@@ -49,8 +49,10 @@ Swell is a one-stop shop for sending and monitoring your API requests
 
 ### **Latest Swell v.0.4.0 update**
 * *gRPC*: Swell includes full support for all four streaming types of gRPC - unary, client stream, server stream, bidirectional stream
-<kbd><img src="./ReadMeGifs/Swell_API_gRPC.gif"
-     style="float: left; margin-right: 10px;margin-bottom : 30px; margin-top : 10px;" /></kbd>
+<kbd><video width="100%" height="auto" controls loop autoplay style="float: left; margin-right: 10px; margin-bottom : 30px; margin-top : 10px; border: 1px solid black;">
+  <source src="./ReadMeGifs/grpc_03.mp4" type="video/mp4">
+Your browser does not support the video tag.
+</video></kbd>
 
 ## Additional Features
 * *Collections*: Swell allows you to save collections for easier testing of multiple requests.
