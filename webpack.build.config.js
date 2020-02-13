@@ -50,13 +50,7 @@ module.exports = {
   target: 'electron-renderer',
   optimization: {
    minimize: true,
-   minimizer: [new TerserPlugin({
-     terserOptions: {
-       compress: {
-         drop_console: true,
-       },
-     },
-   })],
+   minimizer: [new TerserPlugin({})],
   },
   externals: [nodeExternals()],
   plugins: [
