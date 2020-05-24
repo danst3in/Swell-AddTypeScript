@@ -6,8 +6,8 @@
   "repository": "https://github.com/open-source-labs/Swell",
   "scripts": {
     "test": "jest",
-    "prod": "webpack --mode production --config webpack.build.config.js && electron --noDevServer .",
-    "start": "webpack-dev-server --hot --host 0.0.0.0 --config=./webpack.dev.config.js --mode development",
+    "prod": "NODE_ENV=production webpack --config webpack.build.config.js && electron --noDevServer .",
+    "start": "NODE_ENV=development webpack-dev-server --hot --host 0.0.0.0 --config=./webpack.dev.config.js",
     "build": "webpack --config webpack.build.config.js --mode production",
     "server": "nodemon test-server/server.js",
     "package-mac": "electron-builder  build --x64 --mac",
@@ -15,7 +15,7 @@
     "package-linux": "electron-builder build --linux",
     "gh-publish-mac": "electron-builder build --x64 --mac -p always",
     "gh-publish": "electron-builder build -mwl -p always",
-    "postinstall": "npm rebuild grpc --runtime=electron --target=7.0.1"
+    "postinstall": "npm rebuild @grpc/grpc-js --runtime=electron --target=7.0.1"
   },
   "author": {
     "name": "Swell",
