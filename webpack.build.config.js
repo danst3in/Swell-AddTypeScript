@@ -10,7 +10,7 @@ const nodeExternals = require("webpack-node-externals");
 const defaultInclude = path.resolve(__dirname, "src");
 
 module.exports = {
-  mode: process.env.NODE_ENV,
+  mode: "production",
   module: {
     rules: [
       { test: /\.(ts|js)x?$/, loader: "babel-loader", exclude: /node_modules/ },

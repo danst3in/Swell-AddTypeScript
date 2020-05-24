@@ -116,13 +116,24 @@ const touchBar = new TouchBar([
 // Keep a reference for dev mode
 let dev = false;
 
-if (
-  process.defaultApp ||
-  /[\\/]electron-prebuilt[\\/]/.test(process.execPath) ||
-  /[\\/]electron[\\/]/.test(process.execPath)
-) {
-  dev = true;
-}
+// this works if npm run build, followed by npm run package-(any of the scripts),
+// and then open from executable file
+dev = !app.isPackaged;
+// console.log("dev via !app.isPackaged", dev);
+// console.log("app.isPackaged", app.isPackaged);
+
+//  the below solution no longer works for checking production mode
+//  re: hiding dev tools when running "npm run prod"
+
+// if (
+//   process.defaultApp ||
+//   /[\\/]electron-prebuilt[\\/]/.test(process.execPath) ||
+//   /[\\/]electron[\\/]/.test(process.execPath)
+// ) {
+//   dev = true;
+// }
+//
+// console.log("dev via regex check", dev);
 
 // Temporary fix broken high-dpi scale factor on Windows (125% scaling)
 // info: https://github.com/electron/electron/issues/9691
