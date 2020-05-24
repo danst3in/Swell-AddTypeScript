@@ -134,23 +134,42 @@ if (process.platform === "win32") {
 
 function createWindow() {
   // Create the new browser window instance.
-  mainWindow = new BrowserWindow({
-    width: 2000,
-    height: 1000,
-    minWidth: 1304,
-    minHeight: 700,
-    backgroundColor: "-webkit-linear-gradient(top, #3dadc2 0%,#2f4858 100%)",
-    show: false,
-    title: "Swell",
-    allowRunningInsecureContent: true,
-    webPreferences: {
-      devTools: false,
-      nodeIntegration: true,
-      sandbox: false,
-      webSecurity: true,
-    },
-    icon: `${__dirname}/src/assets/icons/64x64.png`,
-  });
+  if (!dev) {
+    mainWindow = new BrowserWindow({
+      width: 2000,
+      height: 1000,
+      minWidth: 1304,
+      minHeight: 700,
+      backgroundColor: "-webkit-linear-gradient(top, #3dadc2 0%,#2f4858 100%)",
+      show: false,
+      title: "Swell",
+      allowRunningInsecureContent: true,
+      webPreferences: {
+        devTools: false,
+        nodeIntegration: true,
+        sandbox: false,
+        webSecurity: true,
+      },
+      icon: `${__dirname}/src/assets/icons/64x64.png`,
+    });
+  } else {
+    mainWindow = new BrowserWindow({
+      width: 2000,
+      height: 1000,
+      minWidth: 1304,
+      minHeight: 700,
+      backgroundColor: "-webkit-linear-gradient(top, #3dadc2 0%,#2f4858 100%)",
+      show: false,
+      title: "Swell",
+      allowRunningInsecureContent: true,
+      webPreferences: {
+        nodeIntegration: true,
+        sandbox: false,
+        webSecurity: true,
+      },
+      icon: `${__dirname}/src/assets/icons/64x64.png`,
+    });
+  }
 
   if (dev) {
     const {
