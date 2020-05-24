@@ -3,16 +3,16 @@ import { ipcRenderer } from "electron";
 import { remote } from 'electron';
 import * as store from '../store';
 import * as actions from '../actions/actions';
-import { Metadata } from "grpc";
+import { Metadata } from "@grpc/grpc-js";
 
 
 
-const async = require('async');
-const fs = require('fs');
-const parseArgs = require('minimist');
-const path = require('path');
-const grpc = require('grpc');
-const protoLoader = require('@grpc/proto-loader');
+const async = require ('async');
+const fs = require ('fs');
+const parseArgs = require ('minimist');
+const path = require ('path');
+const grpc = require ('@grpc/grpc-js');
+const protoLoader = require ('@grpc/proto-loader');
 
 let grpcController = {};
 
