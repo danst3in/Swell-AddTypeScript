@@ -11,9 +11,17 @@ const defaultInclude = path.resolve(__dirname, "src");
 
 module.exports = {
   mode: "production",
+  resolve: {
+    extensions: [".ts", ".tsx", ".js", ".json"],
+  },
   module: {
     rules: [
-      { test: /\.(ts|js)x?$/, loader: "babel-loader", exclude: /node_modules/ },
+      {
+        test: /\.(ts|js)x?$/,
+        loader: "babel-loader",
+        include: defaultInclude,
+        exclude: /node_modules/,
+      },
       {
         test: /\.css$/,
         use: [MiniCssExtractPlugin.loader, "css-loader"],
@@ -24,11 +32,6 @@ module.exports = {
         use: ["style-loader", "css-loader", "sass-loader"],
         include: defaultInclude,
       },
-      {
-        test: /\.jsx?$/,
-        use: [{ loader: "babel-loader" }],
-        include: defaultInclude,
-      }, // remove after taking out all .jsx files?
       {
         test: /\.(jpe?g|png|gif)$/,
         use: [{ loader: "file-loader?name=img/[name]__[hash:base64:5].[ext]" }],
@@ -56,7 +59,7 @@ module.exports = {
   },
   externals: [nodeExternals()],
   plugins: [
-    new HtmlWebpackPlugin(),
+    new HtmlWebpackPlugin({ title: "Swell v0.4.0" }),
     new MiniCssExtractPlugin({
       // Options similar to the same options in webpackOptions.output
       // both options are optional
