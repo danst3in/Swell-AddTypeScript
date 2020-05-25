@@ -13,7 +13,7 @@ import * as log from "electron-log";
 // basic http cookie parser
 import * as cookie from "cookie";
 // node-fetch for the fetch request
-import * as fetch2 from "node-fetch";
+import fetch from "node-fetch";
 
 // GraphQL imports
 import { ApolloClient } from "apollo-client";
@@ -21,8 +21,13 @@ import * as gql from "graphql-tag";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { createHttpLink } from "apollo-link-http";
 import { ApolloLink } from "apollo-link";
-import App from "./src/client/components/containers/App";
+// import App from "./src/client/components/containers/App";
+import * as ElecDevInst from "electron-devtools-installer";
+// require menu file
+import mainMenu from "./menu/mainMenu";
 
+const menuTest = typeof mainMenu;
+console.log("menuTest", menuTest);
 // TouchBarButtons are our nav buttons(ex: Select All, Deselect All, Open Selected, Close Selected, Clear All)
 const { TouchBarButton, TouchBarSpacer } = TouchBar;
 
@@ -163,8 +168,8 @@ function createWindow() {
       backgroundColor: "-webkit-linear-gradient(top, #3dadc2 0%,#2f4858 100%)",
       show: false,
       title: "Swell",
-      allowRunningInsecureContent: true,
       webPreferences: {
+        allowRunningInsecureContent: true,
         devTools: false,
         nodeIntegration: true,
         sandbox: false,
@@ -181,8 +186,8 @@ function createWindow() {
       backgroundColor: "-webkit-linear-gradient(top, #3dadc2 0%,#2f4858 100%)",
       show: false,
       title: "Swell",
-      allowRunningInsecureContent: true,
       webPreferences: {
+        allowRunningInsecureContent: true,
         nodeIntegration: true,
         sandbox: false,
         webSecurity: true,
@@ -191,12 +196,17 @@ function createWindow() {
     });
   }
 
+  //  use reference-elision and typeof to create conditional import of this module in TS.
   if (dev) {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires, global-require
+    const ElecDevInstObj: typeof ElecDevInst = require("electron-devtools-installer");
+    // const {installExtension} = ElecDevInstObj ;
     const {
       default: installExtension,
       REACT_DEVELOPER_TOOLS,
       REDUX_DEVTOOLS,
-    } = require("electron-devtools-installer");
+    } = ElecDevInstObj;
+
     // If we are in developer mode Add React & Redux DevTools to Electon App
     installExtension(REACT_DEVELOPER_TOOLS)
       .then((name) => console.log(`Added Extension:  ${name}`))
@@ -252,12 +262,12 @@ function createWindow() {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
 
-    //tldr: Remove the BrowserWindow instance that we created earlier by setting its value to null when we exit Swell
+    // tldr: Remove the BrowserWindow instance that we created earlier by setting its value to null when we exit Swell
     mainWindow = null;
   });
 
-  //require menu file
-  require("./menu/mainMenu");
+  // // require menu file
+  // require("./menu/mainMenu");
 }
 
 // This method will be called when Electron has finished
@@ -276,7 +286,7 @@ app.on("window-all-closed", () => {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== "darwin") {
-    //darwin refers to macOS...
+    // darwin refers to macOS...
     app.quit(); // If User is on mac exit the program when all windows are closed
   }
 });
@@ -290,7 +300,7 @@ const sendStatusToWindow = (text) => {
 };
 
 ipcMain.on("check-for-update", () => {
-  //listens to ipcRenderer in UpdatePopUpContainer.jsx
+  // listens to ipcRenderer in UpdatePopUpContainer.jsx
   if (!dev) autoUpdater.checkForUpdates();
 });
 // autoUpdater.on('checking-for-update', () => {
@@ -343,7 +353,7 @@ app.on("activate", () => {
 
 // export collection ipc now promise-based
 ipcMain.on("export-collection", (event, args) => {
-  let content = JSON.stringify(args.collection);
+  const content = JSON.stringify(args.collection);
   dialog.showSaveDialog(null).then((resp) => {
     if (resp.filePath === undefined) {
       console.log("You didn't save the file");
@@ -353,7 +363,7 @@ ipcMain.on("export-collection", (event, args) => {
     // fileName is a string that contains the path and filename created in the save file dialog.
     fs.writeFile(resp.filePath, content, (err) => {
       if (err) {
-        console.log("An error ocurred creating the file " + err.message);
+        console.log(`An error ocurred creating the file ${err.message}`);
       }
     });
   });
@@ -378,7 +388,7 @@ ipcMain.on("import-collection", (event, args) => {
     }
 
     // get first file path - not dynamic for multiple files
-    let filepath = fileNames.filePaths[0];
+    const filepath = fileNames.filePaths[0];
 
     // get file extension
     const ext = path.extname(filepath);
@@ -393,7 +403,7 @@ ipcMain.on("import-collection", (event, args) => {
 
     fs.readFile(filepath, "utf-8", (err, data) => {
       if (err) {
-        alert("An error ocurred reading the file :" + err.message);
+        alert(`An error ocurred reading the file : ${err.message}`);
         return;
       }
 
@@ -412,10 +422,10 @@ ipcMain.on("import-collection", (event, args) => {
         // validate parsed data type and properties
         if (
           typeof parsed !== "object" ||
-          !parsed["id"] ||
-          !parsed["name"] ||
-          !parsed["reqResArray"] ||
-          !parsed["created_at"]
+          !parsed.id ||
+          !parsed.name ||
+          !parsed.reqResArray ||
+          !parsed.created_at
         ) {
           options.message = "Invalid File";
           options.detail = "Please try again.";
@@ -434,31 +444,32 @@ ipcMain.on("import-collection", (event, args) => {
 ipcMain.on("http1-fetch-message", (event, arg) => {
   const { method, headers, body } = arg.options;
 
-  fetch2(headers.url, { method, headers, body })
+  fetch(headers.url, { method, headers, body })
     .then((response) => {
-      const headers = response.headers.raw();
+      const freshHeaders: any = response.headers.raw();
       // check if the endpoint sends SSE
       // add status code for regular http requests in the response header
 
-      if (headers["content-type"][0].includes("stream")) {
+      if (freshHeaders["content-type"][0].includes("stream")) {
         // invoke another func that fetches to SSE and reads stream
         // params: method, headers, body
         event.sender.send("http1-fetch-reply", {
-          headers,
+          freshHeaders,
           body: { error: "This Is An SSE endpoint" },
         });
       } else {
-        headers[":status"] = response.status;
+        const statusFix = ":status";
+        freshHeaders[statusFix] = response.status;
 
-        const receivedCookie = headers["set-cookie"];
-        headers.cookies = receivedCookie;
+        const receivedCookie = freshHeaders["set-cookie"];
+        freshHeaders.cookies = receivedCookie;
 
         const contents = /json/.test(response.headers.get("content-type"))
           ? response.json()
           : response.text();
         contents
-          .then((body) => {
-            event.sender.send("http1-fetch-reply", { headers, body });
+          .then((freshBody) => {
+            event.sender.send("http1-fetch-reply", { freshHeaders, freshBody });
           })
           .catch((error) => console.log("ERROR", error));
       }
@@ -467,7 +478,7 @@ ipcMain.on("http1-fetch-message", (event, arg) => {
 });
 
 ipcMain.on("open-gql", (event, args) => {
-  const reqResObj = args.reqResObj;
+  const { reqResObj } = args;
 
   // populating headers object with response headers - except for Content-Type
   const headers = {};
@@ -534,7 +545,7 @@ ipcMain.on("open-gql", (event, args) => {
     uri: reqResObj.url,
     headers,
     credentials: "include",
-    fetch: fetch2,
+    fetch,
   });
 
   // additive composition of multiple links
