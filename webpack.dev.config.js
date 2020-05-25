@@ -10,6 +10,9 @@ const defaultInclude = path.resolve(__dirname, "src");
 
 module.exports = {
   mode: "development",
+  resolve: {
+    extensions: [".ts", ".tsx", ".js", ".json"],
+  },
   module: {
     rules: [
       {
@@ -63,8 +66,5 @@ module.exports = {
         .on("close", (code) => process.exit(0))
         .on("error", (spawnError) => console.error(spawnError));
     },
-  },
-  resolve: {
-    extensions: [".ts", ".tsx", ".js", ".json"],
   },
 };

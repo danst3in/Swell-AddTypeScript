@@ -11,6 +11,9 @@ const defaultInclude = path.resolve(__dirname, "src");
 
 module.exports = {
   mode: "production",
+  resolve: {
+    extensions: [".ts", ".tsx", ".js", ".json"],
+  },
   module: {
     rules: [
       {

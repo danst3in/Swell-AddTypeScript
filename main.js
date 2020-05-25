@@ -1,33 +1,46 @@
 // Import parts of electron to use
 // app - Control your application's event lifecycle
 // ipcMain - Communicate asynchronously from the main process to renderer processes
-import * as path from "path";
-import { app, BrowserWindow, TouchBar, ipcMain, dialog } from "electron";
-import * as url from "url";
-import * as fs from "fs";
+const { app, BrowserWindow, TouchBar, ipcMain, dialog } = require("electron");
+const path = require("path");
+const url = require("url");
+const fs = require("fs");
+// import { app, BrowserWindow, TouchBar, ipcMain, dialog } from "electron";
+// import * as path from "path";
+// import * as url from "url";
+// import * as fs from "fs";
 
 // Import Auto-Updater- Swell will update itself
-import { autoUpdater } from "electron-updater";
-import * as log from "electron-log";
+const { autoUpdater } = require("electron-updater");
+const log = require("electron-log");
+// import { autoUpdater } from "electron-updater";
+// import * as log from "electron-log";
 
 // basic http cookie parser
-import * as cookie from "cookie";
+const cookie = require("cookie");
+// import * as cookie from "cookie";
 // node-fetch for the fetch request
-import fetch from "node-fetch";
+const fetch = require("node-fetch");
+// import fetch from "node-fetch";
 
 // GraphQL imports
-import { ApolloClient } from "apollo-client";
-import * as gql from "graphql-tag";
-import { InMemoryCache } from "apollo-cache-inmemory";
-import { createHttpLink } from "apollo-link-http";
-import { ApolloLink } from "apollo-link";
-// import App from "./src/client/components/containers/App";
-import * as ElecDevInst from "electron-devtools-installer";
-// require menu file
-import mainMenu from "./menu/mainMenu";
+const { ApolloClient } = require("apollo-client");
+const gql = require("graphql-tag");
+const { InMemoryCache } = require("apollo-cache-inmemory");
+const { createHttpLink } = require("apollo-link-http");
+const { ApolloLink } = require("apollo-link");
+// import { ApolloClient } from "apollo-client";
+// import gql from "graphql-tag";
+// import { InMemoryCache } from "apollo-cache-inmemory";
+// import { createHttpLink } from "apollo-link-http";
+// import { ApolloLink } from "apollo-link";
 
-const menuTest = typeof mainMenu;
-console.log("menuTest", menuTest);
+// import * as ElecDevInst from "electron-devtools-installer";
+// require menu file
+// import mainMenu from "./menu/mainMenu";
+// const menuTest = typeof mainMenu;
+// console.log("menuTest", menuTest);
+
 // TouchBarButtons are our nav buttons(ex: Select All, Deselect All, Open Selected, Close Selected, Clear All)
 const { TouchBarButton, TouchBarSpacer } = TouchBar;
 
@@ -44,15 +57,16 @@ autoUpdater.logger = log;
 // autoUpdater.logger.transports.file.level = "info";
 log.info("App starting...");
 
-let mainWindow: Electron.BrowserWindow;
+let mainWindow;
 
 // -----------------------------------------------------------------
 // Create Touchbar buttons
 // -----------------------------------------------------------------
+// TS function types () : void =>
 const tbSelectAllButton = new TouchBarButton({
   label: "Select All",
   backgroundColor: "#3DADC2",
-  click: (): void => {
+  click: () => {
     mainWindow.webContents.send("selectAll");
   },
 });
@@ -60,7 +74,7 @@ const tbSelectAllButton = new TouchBarButton({
 const tbDeselectAllButton = new TouchBarButton({
   label: "Deselect All",
   backgroundColor: "#3DADC2",
-  click: (): void => {
+  click: () => {
     mainWindow.webContents.send("deselectAll");
   },
 });
@@ -68,7 +82,7 @@ const tbDeselectAllButton = new TouchBarButton({
 const tbOpenSelectedButton = new TouchBarButton({
   label: "Open Selected",
   backgroundColor: "#00E28B",
-  click: (): void => {
+  click: () => {
     mainWindow.webContents.send("openAllSelected");
   },
 });
@@ -76,7 +90,7 @@ const tbOpenSelectedButton = new TouchBarButton({
 const tbCloseSelectedButton = new TouchBarButton({
   label: "Close Selected",
   backgroundColor: "#DB5D58",
-  click: (): void => {
+  click: () => {
     mainWindow.webContents.send("closeAllSelected");
   },
 });
@@ -84,7 +98,7 @@ const tbCloseSelectedButton = new TouchBarButton({
 const tbMinimizeAllButton = new TouchBarButton({
   label: "Minimize All",
   backgroundColor: "#3DADC2",
-  click: (): void => {
+  click: () => {
     mainWindow.webContents.send("minimizeAll");
   },
 });
@@ -92,7 +106,7 @@ const tbMinimizeAllButton = new TouchBarButton({
 const tbExpandAllButton = new TouchBarButton({
   label: "Expand All",
   backgroundColor: "#3DADC2",
-  click: (): void => {
+  click: () => {
     mainWindow.webContents.send("expandedAll");
   },
 });
@@ -100,7 +114,7 @@ const tbExpandAllButton = new TouchBarButton({
 const tbClearAllButton = new TouchBarButton({
   label: "Clear All",
   backgroundColor: "#708090",
-  click: (): void => {
+  click: () => {
     mainWindow.webContents.send("clearAll");
   },
 });
@@ -197,16 +211,32 @@ function createWindow() {
   }
 
   //  use reference-elision and typeof to create conditional import of this module in TS.
+  // if (dev) {
+  //   // eslint-disable-next-line @typescript-eslint/no-var-requires, global-require
+  //   const ElecDevInstObj: typeof ElecDevInst = require("electron-devtools-installer");
+  //   // const {installExtension} = ElecDevInstObj ;
+  //   const {
+  //     default: installExtension,
+  //     REACT_DEVELOPER_TOOLS,
+  //     REDUX_DEVTOOLS,
+  //   } = ElecDevInstObj;
+
+  //   // If we are in developer mode Add React & Redux DevTools to Electon App
+  //   installExtension(REACT_DEVELOPER_TOOLS)
+  //     .then((name) => console.log(`Added Extension:  ${name}`))
+  //     .catch((err) => console.log("An error occurred: ", err));
+
+  //   installExtension(REDUX_DEVTOOLS)
+  //     .then((name) => console.log(`Added Extension:  ${name}`))
+  //     .catch((err) => console.log("An error occurred: ", err));
+  // }
+
   if (dev) {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires, global-require
-    const ElecDevInstObj: typeof ElecDevInst = require("electron-devtools-installer");
-    // const {installExtension} = ElecDevInstObj ;
     const {
       default: installExtension,
       REACT_DEVELOPER_TOOLS,
       REDUX_DEVTOOLS,
-    } = ElecDevInstObj;
-
+    } = require("electron-devtools-installer");
     // If we are in developer mode Add React & Redux DevTools to Electon App
     installExtension(REACT_DEVELOPER_TOOLS)
       .then((name) => console.log(`Added Extension:  ${name}`))
@@ -267,7 +297,7 @@ function createWindow() {
   });
 
   // // require menu file
-  // require("./menu/mainMenu");
+  require("./menu/mainMenu");
 }
 
 // This method will be called when Electron has finished
@@ -446,7 +476,8 @@ ipcMain.on("http1-fetch-message", (event, arg) => {
 
   fetch(headers.url, { method, headers, body })
     .then((response) => {
-      const freshHeaders: any = response.headers.raw();
+      // fix in TS
+      const freshHeaders /*: any*/ = response.headers.raw();
       // check if the endpoint sends SSE
       // add status code for regular http requests in the response header
 
@@ -489,9 +520,10 @@ ipcMain.on("open-gql", (event, args) => {
     });
 
   // request cookies from reqResObj to request headers
-  let cookies;
+  let cookies; //: string; Type for TS
   if (reqResObj.request.cookies.length) {
     cookies = reqResObj.request.cookies.reduce((acc, userCookie) => {
+      // eslint-disable-next-line prefer-template
       return acc + `${userCookie.key}=${userCookie.value}; `;
     }, "");
   }
