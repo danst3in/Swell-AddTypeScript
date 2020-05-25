@@ -59,7 +59,7 @@ module.exports = {
   },
   externals: [nodeExternals()],
   plugins: [
-    new HtmlWebpackPlugin(),
+    new HtmlWebpackPlugin({ title: "Swell v0.4.0" }),
     new MiniCssExtractPlugin({
       // Options similar to the same options in webpackOptions.output
       // both options are optional

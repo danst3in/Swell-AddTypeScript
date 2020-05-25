@@ -44,7 +44,7 @@ module.exports = {
   target: "electron-renderer",
   externals: [nodeExternals()],
   plugins: [
-    new HtmlWebpackPlugin(),
+    new HtmlWebpackPlugin({ title: "Swell v0.4.0" }),
     new webpack.DefinePlugin({
       "process.env.NODE_ENV": JSON.stringify("development"),
     }),
