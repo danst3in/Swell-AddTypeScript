@@ -1,38 +1,45 @@
-// Allow self-signing HTTPS over TLS
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
-
 // Import parts of electron to use
 // app - Control your application's event lifecycle
 // ipcMain - Communicate asynchronously from the main process to renderer processes
-const { app, BrowserWindow, TouchBar, ipcMain, dialog } = require("electron");
-const path = require("path");
-const url = require("url");
-const fs = require("fs");
+import * as path from "path";
+import { app, BrowserWindow, TouchBar, ipcMain, dialog } from "electron";
+import * as url from "url";
+import * as fs from "fs";
 
 // Import Auto-Updater- Swell will update itself
-const { autoUpdater } = require("electron-updater");
-const log = require("electron-log");
+import { autoUpdater } from "electron-updater";
+import * as log from "electron-log";
+
+// basic http cookie parser
+import * as cookie from "cookie";
+// node-fetch for the fetch request
+import * as fetch2 from "node-fetch";
+
+// GraphQL imports
+import { ApolloClient } from "apollo-client";
+import * as gql from "graphql-tag";
+import { InMemoryCache } from "apollo-cache-inmemory";
+import { createHttpLink } from "apollo-link-http";
+import { ApolloLink } from "apollo-link";
+import App from "./src/client/components/containers/App";
+
 // TouchBarButtons are our nav buttons(ex: Select All, Deselect All, Open Selected, Close Selected, Clear All)
 const { TouchBarButton, TouchBarSpacer } = TouchBar;
 
-// basic http cookie parser
-const cookie = require("cookie");
-// node-fetch for the fetch request
-const fetch2 = require("node-fetch");
-
-// GraphQL imports
-const ApolloClient = require("apollo-client").ApolloClient;
-const gql = require("graphql-tag");
-const { InMemoryCache } = require("apollo-cache-inmemory");
-const { createHttpLink } = require("apollo-link-http");
-const { ApolloLink } = require("apollo-link");
+// Allow self-signing HTTPS over TLS
+// Disabling Node's rejection of invalid/unauthorized certificates
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+// from stack overflow: https://stackoverflow.com/a/35633993/11606641
+// Your fix is insecure and shouldn't really be done at all, but is often done in development (it should never be done in production).
+// The proper solution should be to put the self-signed certificate in your trusted root store OR to get a proper certificate signed by an existing Certificate Authority (which is already trusted by your server).
 
 // configure logging
+log.transports.file.level = "info";
 autoUpdater.logger = log;
-autoUpdater.logger.transports.file.level = "info";
+// autoUpdater.logger.transports.file.level = "info";
 log.info("App starting...");
 
-let mainWindow;
+let mainWindow: Electron.BrowserWindow;
 
 // -----------------------------------------------------------------
 // Create Touchbar buttons
@@ -40,7 +47,7 @@ let mainWindow;
 const tbSelectAllButton = new TouchBarButton({
   label: "Select All",
   backgroundColor: "#3DADC2",
-  click: () => {
+  click: (): void => {
     mainWindow.webContents.send("selectAll");
   },
 });
@@ -48,7 +55,7 @@ const tbSelectAllButton = new TouchBarButton({
 const tbDeselectAllButton = new TouchBarButton({
   label: "Deselect All",
   backgroundColor: "#3DADC2",
-  click: () => {
+  click: (): void => {
     mainWindow.webContents.send("deselectAll");
   },
 });
@@ -56,7 +63,7 @@ const tbDeselectAllButton = new TouchBarButton({
 const tbOpenSelectedButton = new TouchBarButton({
   label: "Open Selected",
   backgroundColor: "#00E28B",
-  click: () => {
+  click: (): void => {
     mainWindow.webContents.send("openAllSelected");
   },
 });
@@ -64,7 +71,7 @@ const tbOpenSelectedButton = new TouchBarButton({
 const tbCloseSelectedButton = new TouchBarButton({
   label: "Close Selected",
   backgroundColor: "#DB5D58",
-  click: () => {
+  click: (): void => {
     mainWindow.webContents.send("closeAllSelected");
   },
 });
@@ -72,7 +79,7 @@ const tbCloseSelectedButton = new TouchBarButton({
 const tbMinimizeAllButton = new TouchBarButton({
   label: "Minimize All",
   backgroundColor: "#3DADC2",
-  click: () => {
+  click: (): void => {
     mainWindow.webContents.send("minimizeAll");
   },
 });
@@ -80,7 +87,7 @@ const tbMinimizeAllButton = new TouchBarButton({
 const tbExpandAllButton = new TouchBarButton({
   label: "Expand All",
   backgroundColor: "#3DADC2",
-  click: () => {
+  click: (): void => {
     mainWindow.webContents.send("expandedAll");
   },
 });
@@ -88,30 +95,32 @@ const tbExpandAllButton = new TouchBarButton({
 const tbClearAllButton = new TouchBarButton({
   label: "Clear All",
   backgroundColor: "#708090",
-  click: () => {
+  click: (): void => {
     mainWindow.webContents.send("clearAll");
   },
 });
 
-const tbSpacer = new TouchBarSpacer();
+const tbSpacer = new TouchBarSpacer({});
 
-const tbFlexSpacer = new TouchBarSpacer({
-  size: "flexible",
-});
+// const tbFlexSpacer = new TouchBarSpacer({
+//   size: "flexible",
+// });
 // -----------------------------------------------------------------
 // Attach earlier made buttons to a touch bar
 // -----------------------------------------------------------------
 
-const touchBar = new TouchBar([
-  tbSpacer,
-  tbSelectAllButton,
-  tbDeselectAllButton,
-  tbOpenSelectedButton,
-  tbCloseSelectedButton,
-  tbMinimizeAllButton,
-  tbExpandAllButton,
-  tbClearAllButton,
-]);
+const touchBar = new TouchBar({
+  items: [
+    tbSpacer,
+    tbSelectAllButton,
+    tbDeselectAllButton,
+    tbOpenSelectedButton,
+    tbCloseSelectedButton,
+    tbMinimizeAllButton,
+    tbExpandAllButton,
+    tbClearAllButton,
+  ],
+});
 
 // Keep a reference for dev mode
 let dev = false;

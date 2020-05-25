@@ -12,7 +12,12 @@ module.exports = {
   mode: "development",
   module: {
     rules: [
-      { test: /\.(ts|js)x?$/, loader: "babel-loader", exclude: /node_modules/ },
+      {
+        test: /\.(ts|js)x?$/,
+        loader: "babel-loader",
+        include: defaultInclude,
+        exclude: /node_modules/,
+      },
       {
         test: /\.scss$/,
         use: ["style-loader", "css-loader", "sass-loader"],
@@ -21,11 +26,6 @@ module.exports = {
         test: /\.css$/,
         use: [{ loader: "style-loader" }, { loader: "css-loader" }],
       },
-      {
-        test: /\.(js|jsx)$/,
-        exclude: /node_modules/,
-        use: [{ loader: "babel-loader" }],
-      }, // remove after taking out all .jsx files?
       {
         test: /\.(jpe?g|png|gif)$/,
         use: [{ loader: "file-loader?name=img/[name]__[hash:base64:5].[ext]" }],
@@ -46,7 +46,7 @@ module.exports = {
       "process.env.NODE_ENV": JSON.stringify("development"),
     }),
   ],
-  devtool: "cheap-source-map",
+  devtool: "inline-source-map",
   devServer: {
     contentBase: path.resolve(__dirname, "dist"),
     stats: {
