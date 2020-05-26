@@ -1,3 +1,4 @@
+/* eslint-disable global-require */
 // Import parts of electron to use
 // app - Control your application's event lifecycle
 // ipcMain - Communicate asynchronously from the main process to renderer processes

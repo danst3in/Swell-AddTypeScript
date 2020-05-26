@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig-base.json",
+  "compilerOptions": { "module": "es2015" },
+  "files": [
+    "businessReducer.ts",
+    "uiReducer.ts",
+    "composerTests.ts",
+    "protoParserTests.ts",
+    "responseTests.ts"
+  ],
+  "references": [
+    {
+      "path": "../../src/client"
+    }
+  ]
+}
