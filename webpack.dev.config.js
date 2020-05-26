@@ -6,7 +6,8 @@ const nodeExternals = require("webpack-node-externals");
 
 // Any directories you will be adding code/files into,
 // need to be added to this array so webpack will pick them up
-const defaultInclude = path.resolve(__dirname, "src");
+const rendererInclude = path.resolve(__dirname, "src");
+const mainInclude = path.resolve(__dirname, "main");
 
 module.exports = [
   {
@@ -29,7 +30,7 @@ module.exports = [
         {
           test: /\.(ts|js)x?$/,
           loader: "babel-loader",
-          include: defaultInclude,
+          include: mainInclude,
           exclude: /node_modules/,
         },
         {
@@ -95,7 +96,7 @@ module.exports = [
         {
           test: /\.(ts|js)x?$/,
           loader: "babel-loader",
-          include: defaultInclude,
+          include: rendererInclude,
           exclude: /node_modules/,
         },
         {

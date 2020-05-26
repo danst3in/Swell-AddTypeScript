@@ -7,7 +7,8 @@ const nodeExternals = require("webpack-node-externals");
 
 // Any directories you will be adding code/files into,
 // need to be added to this array so webpack will pick them up
-const defaultInclude = path.resolve(__dirname, "src");
+const rendererInclude = path.resolve(__dirname, "src");
+const mainInclude = path.resolve(__dirname, "main");
 
 module.exports = [
   {
@@ -30,32 +31,32 @@ module.exports = [
         {
           test: /\.(ts|js)x?$/,
           loader: "babel-loader",
-          include: defaultInclude,
+          include: mainInclude,
           exclude: /node_modules/,
         },
         {
           test: /\.css$/,
           use: [MiniCssExtractPlugin.loader, "css-loader"],
-          include: defaultInclude,
+          include: mainInclude,
         },
         {
           test: /\.scss$/,
           use: ["style-loader", "css-loader", "sass-loader"],
-          include: defaultInclude,
+          include: mainInclude,
         },
         {
           test: /\.(jpe?g|png|gif)$/,
           use: [
             { loader: "file-loader?name=img/[name]__[hash:base64:5].[ext]" },
           ],
-          include: defaultInclude,
+          include: mainInclude,
         },
         {
           test: /\.(eot|svg|ttf|woff|woff2|mp3)$/,
           use: [
             { loader: "file-loader?name=font/[name]__[hash:base64:5].[ext]" },
           ],
-          include: defaultInclude,
+          include: mainInclude,
         },
       ],
     },
@@ -98,32 +99,32 @@ module.exports = [
         {
           test: /\.(ts|js)x?$/,
           loader: "babel-loader",
-          include: defaultInclude,
+          include: rendererInclude,
           exclude: /node_modules/,
         },
         {
           test: /\.css$/,
           use: [MiniCssExtractPlugin.loader, "css-loader"],
-          include: defaultInclude,
+          include: rendererInclude,
         },
         {
           test: /\.scss$/,
           use: ["style-loader", "css-loader", "sass-loader"],
-          include: defaultInclude,
+          include: rendererInclude,
         },
         {
           test: /\.(jpe?g|png|gif)$/,
           use: [
             { loader: "file-loader?name=img/[name]__[hash:base64:5].[ext]" },
           ],
-          include: defaultInclude,
+          include: rendererInclude,
         },
         {
           test: /\.(eot|svg|ttf|woff|woff2|mp3)$/,
           use: [
             { loader: "file-loader?name=font/[name]__[hash:base64:5].[ext]" },
           ],
-          include: defaultInclude,
+          include: rendererInclude,
         },
       ],
     },
