@@ -2,7 +2,7 @@
   "name": "Swell",
   "version": "0.4.0",
   "description": "Swell",
-  "main": "./main.js",
+  "main": "./main/swell.js",
   "repository": "https://github.com/open-source-labs/Swell",
   "scripts": {
     "test": "jest",
@@ -121,9 +121,8 @@
       "dist/img/arrow_drop_down_white_192x192__3cp1B.png",
       "menu/mainMenu.js",
       "package.json",
-      "main.js",
-      "httpserver.js",
-      "tester.js"
+      "swell.js",
+      "httpserver.js"
     ],
     "nodeVersion": "12.14.1",
     "nsis": {
