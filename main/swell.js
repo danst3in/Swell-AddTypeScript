@@ -262,7 +262,7 @@ function createWindow() {
     indexPath = url.format({
       // if we are not in dev mode load production build file
       protocol: "file:",
-      pathname: path.join(__dirname, "dist", "index.html"),
+      pathname: path.join(__dirname, "../", "dist", "index.html"),
       slashes: true,
     });
   }
