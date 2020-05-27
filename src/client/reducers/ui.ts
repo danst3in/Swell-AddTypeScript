@@ -1,11 +1,14 @@
-import * as types from '../actions/actionTypes';
+import * as types from "../actions/actionTypes";
 
-const initialState = {
+const initialState: types.UIState = {
   warningIsDisplayed: true,
-  composerDisplay: 'Request',
+  composerDisplay: "Request",
 };
 
-const uiReducer = (state = initialState, action) => {
+const uiReducer = (
+  state = initialState,
+  action: types.UIActionTypes
+): types.UIState => {
   switch (action.type) {
     case types.SHOW_WARNING: {
       return {

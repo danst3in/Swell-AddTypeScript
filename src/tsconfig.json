@@ -64,5 +64,12 @@
     /* Advanced Options */
     // "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */
   },
-  "files": ["index.tsx", "client/store.ts"]
+  "files": [
+    "index.tsx",
+    "client/store.ts",
+    "client/actions/actionTypes.ts",
+    "client/actions/actions.ts",
+    "client/reducers/ui.ts",
+    "client/reducers/index.ts"
+  ]
 }
