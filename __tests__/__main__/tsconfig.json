@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig-base.json",
+  "compilerOptions": { "module": "commonjs" },
+  "files": ["swellTests.ts", "httpserverTests.ts", "mainMenuTests.ts"],
+  "references": [
+    {
+      "path": "../../main"
+    }
+  ]
+}

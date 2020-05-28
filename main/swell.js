@@ -1,3 +1,4 @@
+/* eslint-disable global-require */
 // Import parts of electron to use
 // app - Control your application's event lifecycle
 // ipcMain - Communicate asynchronously from the main process to renderer processes
@@ -37,7 +38,7 @@ const { ApolloLink } = require("apollo-link");
 
 // import * as ElecDevInst from "electron-devtools-installer";
 // require menu file
-// import mainMenu from "./menu/mainMenu";
+// import mainMenu from "./mainMenu";
 // const menuTest = typeof mainMenu;
 // console.log("menuTest", menuTest);
 
@@ -297,7 +298,7 @@ function createWindow() {
   });
 
   // // require menu file
-  require("./menu/mainMenu");
+  require("./mainMenu");
 }
 
 // This method will be called when Electron has finished

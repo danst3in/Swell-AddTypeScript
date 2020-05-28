@@ -23,7 +23,7 @@ module.exports = [
       __filename: false,
     },
     resolve: {
-      extensions: [".ts", ".tsx", ".js", ".json"],
+      extensions: [".ts", ".tsx", ".js", ".jsx", ".json"],
     },
     module: {
       rules: [
@@ -82,7 +82,7 @@ module.exports = [
   },
   {
     mode: "development",
-    entry: path.join(__dirname, "src", "index.js"),
+    entry: path.join(__dirname, "src", "index.tsx"),
     output: {
       path: path.join(__dirname, "dist"),
       filename: "renderer-bundle.js",
